@@ -53,28 +53,37 @@ if __name__ == '__main__':
     listener.start()
     while True:
         # acquire data
-        result1, image1 = cam1.read()  # resolution: [3000, 4096]
+        retval, frame = cam1.read()  # resolution: [3000, 4096]
         #result1, image2 = cam2.read()
 
+        left_right_image = np.split(frame, 2, axis=1)
+        # Display images
+        #cv2.imshow("left RAW", left_right_image[0])
+
+        #left_rect = cv2.remap(left_right_image[0], map_left_x, map_left_y, interpolation=cv2.INTER_LINEAR)
+        #right_rect = cv2.remap(left_right_image[1], map_right_x, map_right_y, interpolation=cv2.INTER_LINEAR)
+
+        cv2.imshow("left RECT", np.concatenate([left_right_image[0], left_right_image[1]], axis=1))
         #flir_img1 = cv2.resize(image1, (1920, 1200))
         #flir_img2 = cam2.get_array()  # resolution: [3000, 4096]
         #flir_img2 = cv2.resize(image2, (2048, 1500))
-
+        
         # plot
         #flir_for_plot1 = cv2.resize(flir_img1, (flir_img1.shape[1] // 4, flir_img1.shape[0] // 4))
         #flir_for_plot2 = cv2.resize(flir_img2, (flir_img2.shape[1] // 2, flir_img2.shape[0] // 2))
         #flir_for_plot = np.concatenate([flir_for_plot2, flir_for_plot1], axis=1)
         #flir_for_plot = skimage.transform.rescale(flir_for_plot, 0.6)
-        cv2.imshow('concated imgs', image1)
+        #cv2.imshow('concated imgs', image1)
         k = cv2.waitKey(1)
 
         # save images
         if IS_KEY_S_PRESSED is True:
             print('capturing the {}-th pair'.format(img_counter))
-            #cv2.imwrite('../data/{}/left/{}.png'.format(task_name, img_counter), flir_img2)             
-            cv2.imwrite('../data/{}/right/{}.png'.format(task_name, img_counter), image1)
+
+            cv2.imwrite('./data/{}/left/{}.png'.format(task_name, img_counter), left_right_image[0])             
+            cv2.imwrite('./data/{}/right/{}.png'.format(task_name, img_counter), left_right_image[1])
             img_counter += 1
             time.sleep(0.1)
             IS_KEY_S_PRESSED = False
-            if (img_counter == 15):
+            if (img_counter == 18):
                 break

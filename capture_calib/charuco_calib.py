@@ -286,8 +286,8 @@ def calibrate_stereo_camera(board_size, marker_division, data_dir_l, data_dir_r,
 if __name__ == '__main__':
     # board_size = [15, 11.194]  # square_length, marker_length
     # marker_division = [12, 9]  # squares_x, squares_y
-    board_size = [7.5, 5.6]  # square_length, marker_length
-    marker_division = [25, 18]  # squares_x, squares_y
+    board_size = [26.32, 19.62]  # square_length, marker_length
+    marker_division = [10, 8]  # squares_x, squares_y
 
     ## single camera calibration
     # data_dir = './data/stereo_calib/flir'
@@ -295,11 +295,11 @@ if __name__ == '__main__':
     # res = calibrate_single_camera(board_size, marker_division, data_dir, target_size, f=25, pixel_size=0.0034)
 
     ## stereo camera calibration
-    data_dir = '../data/stereo_calib_flir'
+    data_dir = './data/tadek_camera'
     data_dir_l = os.path.join(data_dir, 'left')
     data_dir_r = os.path.join(data_dir, 'right')
-    res = calibrate_stereo_camera(board_size, marker_division, data_dir_l, data_dir_r, f_l=25, f_r=25,
-                                  pixel_size_l=0.0034, pixel_size_r=0.0034)
+    res = calibrate_stereo_camera(board_size, marker_division, data_dir_l, data_dir_r, f_l=2.1, f_r=2.1,
+                                  pixel_size_l=0.002, pixel_size_r=0.002)
     save_h5py_file(os.path.join(data_dir, 'stereo_calib_data.h5'), res)
 
 
