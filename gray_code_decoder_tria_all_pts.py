@@ -54,8 +54,10 @@ def compute_shadow_mask(black_img, white_img, threshold):
 
 
 if __name__ == '__main__':
-    proj_w, proj_h = 1920, 1080
+    #proj_w, proj_h = 1920, 1080
+    proj_w, proj_h = 1280, 800
     white_thred, black_thred = 5, 40 # white-thred for pos-neg decode, black_thred for white-black shading detection
+    img_size = (2048, 1500)
     img_size = (2048, 1500)
     img_dir = './data/bag'
     calib_data_dir = './data/stereo_calib_flir/stereo_calib_data.h5'
