@@ -29,7 +29,7 @@ if __name__ == '__main__':
     exposure_time = 25000
 
     #cam1 = VideoCapture(0)
-    cam1 = VideoCapture(0)
+    cam1 = VideoCapture(1)
     # FLIR camera setup
     # flir_cam1 = FLIR(0)
     # flir_cam1.init()
@@ -55,15 +55,15 @@ if __name__ == '__main__':
         # acquire data
         retval, frame = cam1.read()  # resolution: [3000, 4096]
         #result1, image2 = cam2.read()
-
         left_right_image = np.split(frame, 2, axis=1)
         # Display images
-        #cv2.imshow("left RAW", left_right_image[0])
+        cv2.imshow("left RAW", left_right_image[0])
 
         #left_rect = cv2.remap(left_right_image[0], map_left_x, map_left_y, interpolation=cv2.INTER_LINEAR)
         #right_rect = cv2.remap(left_right_image[1], map_right_x, map_right_y, interpolation=cv2.INTER_LINEAR)
 
-        cv2.imshow("left RECT", np.concatenate([left_right_image[0], left_right_image[1]], axis=1))
+        #cv2.imshow("left RECT", np.concatenate([left_right_image[0], left_right_image[1]], axis=1))
+        cv2.imshow("left RECT", left_right_image[1])
         #flir_img1 = cv2.resize(image1, (1920, 1200))
         #flir_img2 = cam2.get_array()  # resolution: [3000, 4096]
         #flir_img2 = cv2.resize(image2, (2048, 1500))
@@ -82,6 +82,8 @@ if __name__ == '__main__':
 
             cv2.imwrite('./data/{}/left/{}.png'.format(task_name, img_counter), left_right_image[0])             
             cv2.imwrite('./data/{}/right/{}.png'.format(task_name, img_counter), left_right_image[1])
+            #cv2.imwrite('./data/{}/right/{}.png'.format(task_name, img_counter), frame)
+            
             img_counter += 1
             time.sleep(0.1)
             IS_KEY_S_PRESSED = False
