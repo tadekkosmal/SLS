@@ -15,6 +15,7 @@ if __name__ == '__main__':
     exposure_time = 25000
     #cam1 = VideoCapture(0)
     cam1 = VideoCapture(0)
+    cam2 = VideoCapture(2)
 
 
 
@@ -47,10 +48,11 @@ if __name__ == '__main__':
         k = cv2.waitKey(0)
         if k == ord("q"):
             cv2.destroyWindow(capname)
-            retval, frame = cam1.read()
-            left_right_image = np.split(frame, 2, axis=1)
-            cv2.imwrite('./data/{}/left/{}.png'.format(task_name, img_counter), left_right_image[0])             
-            cv2.imwrite('./data/{}/right/{}.png'.format(task_name, img_counter), left_right_image[1])
+            retval, frame1 = cam1.read()
+            retval, frame2 = cam2.read()
+            
+            cv2.imwrite('./data/{}/left/{}.png'.format(task_name, img_counter), frame1)             
+            cv2.imwrite('./data/{}/right/{}.png'.format(task_name, img_counter), frame2)
             img_counter += 1
             continue
         else:

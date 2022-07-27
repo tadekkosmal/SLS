@@ -28,24 +28,9 @@ if __name__ == '__main__':
     img_counter = 0
     exposure_time = 25000
 
-    #cam1 = VideoCapture(0)
-    cam1 = VideoCapture(1)
-    # FLIR camera setup
-    # flir_cam1 = FLIR(0)
-    # flir_cam1.init()
-    # flir_cam1.start()
-    # flir_cam1.GainAuto = 'Off'
-    # flir_cam1.Gain = min(20, flir_cam1.get_info('Gain')['max'])  # set the gain to 20 dB or the maximum of the camera.
-    # flir_cam1.ExposureAuto = 'Off'
-    # flir_cam1.ExposureTime = exposure_time
 
-    # flir_cam2 = FLIR(1)
-    # flir_cam2.init()
-    # flir_cam2.start()
-    # flir_cam2.GainAuto = 'Off'
-    # flir_cam2.Gain = min(20, flir_cam1.get_info('Gain')['max'])  # set the gain to 20 dB or the maximum of the camera.
-    # flir_cam2.ExposureAuto = 'Off'
-    # flir_cam2.ExposureTime = exposure_time
+    cam1 = VideoCapture(0)
+    cam2 = VideoCapture(2)
 
     # live stream
     print('start streaming-------------------------')
@@ -53,35 +38,37 @@ if __name__ == '__main__':
     listener.start()
     while True:
         # acquire data
-        retval, frame = cam1.read()  # resolution: [3000, 4096]
+        retval1, frame1 = cam1.read()  # resolution: [3000, 4096]
+        retval2, frame2 = cam2.read()
         #result1, image2 = cam2.read()
-        left_right_image = np.split(frame, 2, axis=1)
+        #left_right_image = np.split(frame, 2, axis=1)
         # Display images
-        cv2.imshow("left RAW", left_right_image[0])
+        #cv2.imshow("left RAW", frame1)
 
         #left_rect = cv2.remap(left_right_image[0], map_left_x, map_left_y, interpolation=cv2.INTER_LINEAR)
         #right_rect = cv2.remap(left_right_image[1], map_right_x, map_right_y, interpolation=cv2.INTER_LINEAR)
 
         #cv2.imshow("left RECT", np.concatenate([left_right_image[0], left_right_image[1]], axis=1))
-        cv2.imshow("left RECT", left_right_image[1])
+        #cv2.imshow("left RECT", frame)
         #flir_img1 = cv2.resize(image1, (1920, 1200))
         #flir_img2 = cam2.get_array()  # resolution: [3000, 4096]
         #flir_img2 = cv2.resize(image2, (2048, 1500))
         
         # plot
-        #flir_for_plot1 = cv2.resize(flir_img1, (flir_img1.shape[1] // 4, flir_img1.shape[0] // 4))
-        #flir_for_plot2 = cv2.resize(flir_img2, (flir_img2.shape[1] // 2, flir_img2.shape[0] // 2))
-        #flir_for_plot = np.concatenate([flir_for_plot2, flir_for_plot1], axis=1)
+        scale_factor = 1
+        flir_for_plot1 = cv2.resize(frame1, (frame1.shape[1] // scale_factor, frame1.shape[0] // scale_factor))
+        flir_for_plot2 = cv2.resize(frame2, (frame2.shape[1] // scale_factor, frame2.shape[0] // scale_factor))
+        flir_for_plot = np.concatenate([flir_for_plot2, flir_for_plot1], axis=1)
         #flir_for_plot = skimage.transform.rescale(flir_for_plot, 0.6)
-        #cv2.imshow('concated imgs', image1)
+        cv2.imshow('concated imgs', flir_for_plot)
         k = cv2.waitKey(1)
 
         # save images
         if IS_KEY_S_PRESSED is True:
             print('capturing the {}-th pair'.format(img_counter))
 
-            cv2.imwrite('./data/{}/left/{}.png'.format(task_name, img_counter), left_right_image[0])             
-            cv2.imwrite('./data/{}/right/{}.png'.format(task_name, img_counter), left_right_image[1])
+            cv2.imwrite('./data/{}/left/{}.png'.format(task_name, img_counter), frame1)             
+            cv2.imwrite('./data/{}/right/{}.png'.format(task_name, img_counter), frame2)
             #cv2.imwrite('./data/{}/right/{}.png'.format(task_name, img_counter), frame)
             
             img_counter += 1
